@@ -5,15 +5,28 @@
 <section>
   <article>
     <h1>All Reservations</h1>
-    <!--Begin row-->
+    <!-- Begin row -->
     <div class="row">
-      <!--Begin col-->
+      <!-- Begin col -->
       <div class="column">
-        <pre id="bookings"></pre>
+        <div class="reservations-table">
+          <table>
+            <thead>
+              <tr>
+                <th>First Name</th>
+                <th>Reservation Date</th>
+                <th>Reservation Slot</th>
+              </tr>
+            </thead>
+            <tbody id="bookings-table-body">
+              <!-- Reservations will be populated here by JavaScript -->
+            </tbody>
+          </table>
+        </div>
       </div>
-      <!--End col-->
+      <!-- End col -->
 
-      <!--Begin col-->
+      <!-- Begin col -->
       <div class="column">
         <div class="videowrap">
           <iframe
@@ -22,20 +35,70 @@
             referrerpolicy="no-referrer-when-downgrade"></iframe>
         </div>
       </div>
-      <!--End col-->
+      <!-- End col -->
     </div>
-    <!--End row-->
-
-
-
-
+    <!-- End row -->
   </article>
 </section>
 <script>
-  const bookings = JSON.parse('{{ bookings|safe }}')
-  console.log(bookings);
-  const pretty_json = JSON.stringify(bookings,null,2)
-  document.getElementById('bookings').innerHTML = pretty_json
+  const bookings = JSON.parse('{{ bookings|safe }}');
+  const bookingsTableBody = document.getElementById('bookings-table-body');
+
+  bookings.forEach(booking => {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${booking.fields.first_name}</td>
+      <td>${booking.fields.reservation_date}</td>
+      <td>${booking.fields.reservation_slot}</td>
+    `;
+    bookingsTableBody.appendChild(row);
+  });
 </script>
+
+<style>
+  .reservations-table {
+    margin: 20px 0;
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  table {
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+
+  th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+
+  th {
+    background-color: #f2f2f2;
+    color: #333;
+  }
+
+  tr:hover {
+    background-color: #f5f5f5;
+  }
+
+  h1 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .row {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .column {
+    flex: 1;
+    margin: 0 10px;
+  }
+</style>
 {% endblock %}
+
 
